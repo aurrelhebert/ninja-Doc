@@ -7,7 +7,7 @@ import json
 import time
 
 # Backend configuration
-elacticBeUrl="localhost"
+elacticBeUrl="http://localhost"
 elasticBePort="9200"
 elasticIndex="jt13h"
 
@@ -59,6 +59,10 @@ for href in hrefs:
 
 	#print djson.get('timestamp')
 
-	url="curl -XPUT \'" + elacticBeUrl + ":" + elasticBePort + "/" + elasticIndex +"/doc/" + str(djson.get('timestamp')) + "?pretty&pretty\' -H \'Content-Type: application/json\' -d\'" + json_string + "\'" 
-	
-	print url
+	url     = elacticBeUrl + ":" + elasticBePort + "/" + elasticIndex +"/doc/" + str(djson.get('timestamp')) + "?pretty&pretty"
+	payload = json_string
+	headers = { "Content-Type": "application/json" }
+	res = requests.post(url, data=payload, headers=headers)
+
+	#url="curl -XPUT \'" + elacticBeUrl + ":" + elasticBePort + "/" + elasticIndex +"/doc/" + str(djson.get('timestamp')) + "?pretty&pretty\' -H \'Content-Type: application/json\' -d\'" + json_string + "\'" 
+	print res

@@ -65,11 +65,11 @@ for number in range(60):
 			
 			#print json_string
 
-			print djson.get('timestamp')
+			#print djson.get('timestamp')
 
 			# Format URL
 			url     = elacticBeUrl + ":" + elasticBePort + "/" + elasticIndex +"/doc/" + str(djson.get('timestamp')) + "?pretty&pretty"
 			payload = json_string
 			headers = { "Content-Type": "application/json" }
-			#res = requests.post(url, data=payload, headers=headers)
-			#print res
+			res = requests.post(url, data=payload, headers=headers)
+			print res

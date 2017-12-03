@@ -38,40 +38,40 @@ for number in range(60):
 		# Parse data
 		data = currentTree.xpath('//script[contains(., "uploadDate")]/text()')
 
-		# Get JSON
-		djson = json.loads(data[0].encode('utf-8'))
+		if (len(data) >=1):
 
-		# Get current date
-		currentDay=djson.get("uploadDate")
+			# Get JSON
+			djson = json.loads(data[0].encode('utf-8'))
 
-		# Convert date to timestamp
-		tick = time.mktime(datetime.datetime.strptime(currentDay,'%Y-%m-%dT%H:%M:%S.%fZ').timetuple())
+			# Get current date
+			currentDay=djson.get("uploadDate")
 
-		# Manage unique index according to specified tick appearance
-		if (usedTicks.has_key(tick)):
-			index = usedTicks.get(tick)
-			index = index + 1
-		else: 
-			index=0
-		
-		# Save dictionnary
-		usedTicks[tick] = index
+			# Convert date to timestamp
+			tick = time.mktime(datetime.datetime.strptime(currentDay,'%Y-%m-%dT%H:%M:%S.%fZ').timetuple())
 
-		# Push timestamp into JSON
-		djson['timestamp'] = int(round(tick)) * 1000000 + index
+			# Manage unique index according to specified tick appearance
+			if (usedTicks.has_key(tick)):
+				index = usedTicks.get(tick)
+				index = index + 1
+			else: 
+				index=0
+			
+			# Save dictionnary
+			usedTicks[tick] = index
 
-		# Print formatted JSON
-		json_string = json.dumps(djson, ensure_ascii=False).encode('utf8')
-		
-		#print json_string
+			# Push timestamp into JSON
+			djson['timestamp'] = int(round(tick)) * 1000000 + index
 
-		#print djson.get('timestamp')
+			# Print formatted JSON
+			json_string = json.dumps(djson, ensure_ascii=False).encode('utf8')
+			
+			#print json_string
 
-		# Format URL
-		url     = elacticBeUrl + ":" + elasticBePort + "/" + elasticIndex +"/doc/" + str(djson.get('timestamp')) + "?pretty&pretty"
-		payload = json_string
-		headers = { "Content-Type": "application/json" }
-		res = requests.post(url, data=payload, headers=headers)
+			print djson.get('timestamp')
 
-		#url="curl -XPUT \'" + elacticBeUrl + ":" + elasticBePort + "/" + elasticIndex +"/doc/" + str(djson.get('timestamp')) + "?pretty&pretty\' -H \'Content-Type: application/json\' -d\'" + json_string + "\'" 
-		print res
+			# Format URL
+			url     = elacticBeUrl + ":" + elasticBePort + "/" + elasticIndex +"/doc/" + str(djson.get('timestamp')) + "?pretty&pretty"
+			payload = json_string
+			headers = { "Content-Type": "application/json" }
+			#res = requests.post(url, data=payload, headers=headers)
+			#print res

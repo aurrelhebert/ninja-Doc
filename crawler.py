@@ -6,6 +6,11 @@ import datetime
 import json
 import time
 
+# Backend configuration
+elacticBeUrl="localhost"
+elasticBePort="9200"
+elasticIndex="jt13h"
+
 # Load html page
 page = requests.get('https://www.lci.fr/emission/le-13h/')
 tree = html.fromstring(page.content)
@@ -48,8 +53,12 @@ for href in hrefs:
 	djson['timestamp'] = int(round(tick)) * 1000000 + index
 
 	# Print formatted JSON
-	json_string = json.dumps(djson, ensure_ascii=False).encode('utf8').replace("&#39;","\'")
+	json_string = json.dumps(djson, ensure_ascii=False).encode('utf8')
 	
 	#print json_string
 
-	print djson.get('timestamp')
+	#print djson.get('timestamp')
+
+	url="curl -XPUT \'" + elacticBeUrl + ":" + elasticBePort + "/" + elasticIndex +"/doc/" + str(djson.get('timestamp')) + "?pretty&pretty\' -H \'Content-Type: application/json\' -d\'" + json_string + "\'" 
+	
+	print url

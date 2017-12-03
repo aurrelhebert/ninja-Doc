@@ -27,21 +27,19 @@ for number in range(60):
 
 	# For each current title
 	for href in hrefs:
-		
-		# Load current title page
-		hrefs = tree.xpath('//a[@class="medium-3col-article-block-article-link"]//@href')
 
 		# Get it's relative HTML
 		currentPage = requests.get("https://www.lci.fr" + href)
 		currentTree = html.fromstring(currentPage.content)
 
+		print href
 		# Parse data
 		data = currentTree.xpath('//script[contains(., "uploadDate")]/text()')
 
 		if (len(data) >=1):
 
 			# Get JSON
-			djson = json.loads(data[0].encode('utf-8'))
+			djson = json.loads(data[0].encode('utf-8').replace("\n"," "))
 
 			# Get current date
 			currentDay=djson.get("uploadDate")

@@ -18,7 +18,7 @@ for number in range(60):
 	if (number ==1): 
 		page = requests.get('https://www.lci.fr/emission/le-13h/')
 	else:
-		page = requests.get('https://www.lci.fr/emission/le-13h/' + number + "/")
+		page = requests.get('https://www.lci.fr/emission/le-13h/' + str(number) + "/")
 	
 	tree = html.fromstring(page.content)
 

@@ -21,6 +21,8 @@ hrefs = tree.xpath('//a[@class="medium-3col-article-block-article-link"]//@href'
 index = 0
 oldTick = 0
 
+usedTicks = {}
+
 # For each current title
 for href in hrefs:
 	
@@ -43,11 +45,15 @@ for href in hrefs:
 	# Convert date to timestamp
 	tick = time.mktime(datetime.datetime.strptime(currentDay,'%Y-%m-%dT%H:%M:%S.%fZ').timetuple())
 
-	if (oldTick==tick):
+	# Manage unique index according to specified tick appearance
+	if (usedTicks.has_key(tick)):
+		index = usedTicks.get(tick)
 		index = index + 1
-	else:
-		index = 0
-		oldTick = tick
+	else: 
+		index=0
+	
+	# Save dictionnary
+	usedTicks[tick] = index
 
 	# Push timestamp into JSON
 	djson['timestamp'] = int(round(tick)) * 1000000 + index
@@ -57,8 +63,9 @@ for href in hrefs:
 	
 	#print json_string
 
-	#print djson.get('timestamp')
+	print djson.get('timestamp')
 
+	# Format URL
 	url     = elacticBeUrl + ":" + elasticBePort + "/" + elasticIndex +"/doc/" + str(djson.get('timestamp')) + "?pretty&pretty"
 	payload = json_string
 	headers = { "Content-Type": "application/json" }
